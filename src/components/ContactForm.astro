@@ -1,0 +1,89 @@
+---
+import type { ContactFormProps } from '../index.js';
+
+type Props = ContactFormProps;
+
+const {
+  endpoint,
+  method = 'POST',
+  successMessage = "Thanks — we'll reply within two working days.",
+  errorMessage = "Something went wrong. Please email us instead.",
+  submitLabel = 'Send',
+  nameLabel = 'Name',
+  emailLabel = 'Email',
+  messageLabel = 'What are you building?',
+} = Astro.props;
+
+const formId = `pl-form-${Math.random().toString(36).slice(2, 8)}`;
+---
+<form
+  id={formId}
+  class="pl-form"
+  action={endpoint}
+  method={method}
+  data-success={successMessage}
+  data-error={errorMessage}
+  novalidate
+>
+  <label>
+    <span class="pl-form__label">{nameLabel}</span>
+    <input type="text" name="name" autocomplete="name" required />
+  </label>
+
+  <label>
+    <span class="pl-form__label">{emailLabel}</span>
+    <input type="email" name="email" autocomplete="email" required />
+  </label>
+
+  <label>
+    <span class="pl-form__label">{messageLabel}</span>
+    <textarea name="message" rows="4" required></textarea>
+  </label>
+
+  <button class="pl-btn pl-btn--primary" type="submit">{submitLabel}</button>
+
+  <p
+    class="pl-form__status"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></p>
+</form>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('form.pl-form');
+  forms.forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const status = form.querySelector<HTMLElement>('.pl-form__status');
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const data = new FormData(form);
+
+      if (submit) submit.disabled = true;
+      if (status) { status.hidden = true; status.removeAttribute('data-state'); }
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method.toUpperCase() || 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        form.reset();
+        if (status) {
+          status.textContent = form.dataset.success ?? 'Sent.';
+          status.dataset.state = 'sent';
+          status.hidden = false;
+        }
+      } catch {
+        if (status) {
+          status.textContent = form.dataset.error ?? 'Error.';
+          status.dataset.state = 'error';
+          status.hidden = false;
+        }
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  });
+</script>

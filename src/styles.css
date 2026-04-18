@@ -1,0 +1,225 @@
+/* ============================================================
+   Pliosoft Sites SDK — Base + component styles
+   ------------------------------------------------------------
+   Consumes tokens from tokens.css. Load tokens.css BEFORE this
+   file (Layout.astro does this automatically).
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 100%;
+  color: var(--fg1);
+  background: var(--bg1);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+}
+
+img, svg, video { max-width: 100%; display: block; }
+
+h1, h2, h3 {
+  margin: 0;
+  text-transform: uppercase;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-upper);
+  font-weight: var(--fw-bold);
+}
+h1 { font-size: var(--fs-6); }
+h2 { font-size: var(--fs-5); }
+h3 { font-size: var(--fs-4); }
+
+h4 {
+  font-size: var(--fs-2);
+  font-weight: var(--fw-regular);
+  margin: 0.1rem 0 0.2rem;
+  line-height: var(--lh-tight);
+}
+
+p { margin: 1rem 0; line-height: var(--lh-normal); }
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline);
+  text-underline-offset: 2px;
+  transition: color var(--dur) var(--ease-out-back);
+}
+a:hover { color: var(--link-hover); }
+
+:focus-visible { outline: 1px solid var(--focus-ring); outline-offset: 2px; }
+
+code, pre, kbd { font-family: var(--font-mono); font-size: 0.9em; }
+
+hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
+
+.h1-rule { border-bottom: var(--border-rule); padding-bottom: var(--sp-3); }
+
+/* ==========  Buttons  ========== */
+.pl-btn {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 13px;
+  padding: 14px 22px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-none);
+  transition: color var(--dur) var(--ease-out-back), background var(--dur), border-color var(--dur);
+}
+.pl-btn--primary { background: var(--ink-solid); color: var(--bg3); }
+.pl-btn--primary:hover { background: var(--highlight); }
+.pl-btn--link {
+  background: transparent;
+  padding: 8px 2px;
+  color: var(--fg1);
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline);
+  text-underline-offset: 4px;
+}
+.pl-btn--link:hover { color: var(--highlight); }
+
+/* ==========  Nav  ========== */
+.pl-nav {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--sp-5);
+  padding: var(--sp-5) clamp(var(--sp-4), 4vw, var(--sp-7));
+  max-width: var(--page-max);
+  margin: 0 auto;
+}
+.pl-nav__brand {
+  font-weight: var(--fw-bold);
+  text-transform: lowercase;
+  font-size: var(--fs-3);
+  color: var(--fg1);
+  text-decoration: none;
+}
+.pl-nav__brand:hover { color: var(--highlight); }
+.pl-nav__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-self: end;
+  display: flex;
+  gap: var(--sp-5);
+  text-transform: uppercase;
+  font-weight: var(--fw-bold);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  flex-wrap: wrap;
+}
+.pl-nav__links a {
+  text-decoration: none;
+  color: var(--fg1);
+  transition: color var(--dur) var(--ease-out-back);
+}
+.pl-nav__links a:hover,
+.pl-nav__links a[aria-current="page"] { color: var(--highlight); }
+
+/* ==========  Footer  ========== */
+.pl-footer {
+  background: var(--bg1);
+  padding: var(--sp-7) clamp(var(--sp-4), 4vw, var(--sp-7)) var(--sp-7);
+  border-top: 1px solid rgba(80, 42, 18, 0.15);
+  margin-top: var(--sp-9);
+}
+.pl-footer__inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-1) var(--sp-4);
+  align-items: baseline;
+}
+.pl-footer__brand {
+  font-weight: var(--fw-bold);
+  text-transform: lowercase;
+  font-size: var(--fs-3);
+}
+.pl-footer__meta {
+  text-align: right;
+  font-size: var(--fs-1);
+}
+.pl-footer__meta a { color: var(--fg1); }
+.pl-footer__rule {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--highlight);
+  margin: var(--sp-2) 0;
+}
+.pl-footer__tiny {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+@media (max-width: 520px) {
+  .pl-footer__inner { grid-template-columns: 1fr; }
+  .pl-footer__meta { text-align: left; }
+}
+
+/* ==========  Contact form  ========== */
+.pl-form {
+  display: grid;
+  gap: var(--sp-4);
+  max-width: 520px;
+}
+.pl-form label { display: block; }
+.pl-form__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  margin-bottom: 6px;
+  opacity: 0.75;
+}
+.pl-form input,
+.pl-form textarea {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--fg1);
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(80, 42, 18, 0.38);
+  border-radius: var(--radius-none);
+  background: transparent;
+  outline: none;
+  transition: border-color var(--dur), box-shadow var(--dur);
+}
+.pl-form input:focus,
+.pl-form textarea:focus {
+  border-color: var(--highlight);
+  box-shadow: 0 0 0 1px var(--highlight);
+}
+.pl-form .pl-btn { justify-self: start; }
+
+.pl-form__status[data-state="sent"] {
+  padding: var(--sp-4) 0;
+  border-top: 1px solid var(--highlight);
+}
+.pl-form__status[hidden] { display: none; }
+
+/* ==========  Powered-by banner  ========== */
+.pl-powered {
+  display: block;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg2);
+  color: var(--fg2);
+  text-decoration: none;
+  border-top: 1px solid var(--ink-faint);
+}
+.pl-powered:hover { color: var(--highlight); }
+.pl-powered strong { color: var(--fg1); font-weight: var(--fw-bold); }

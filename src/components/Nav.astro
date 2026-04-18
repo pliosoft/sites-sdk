@@ -1,0 +1,27 @@
+---
+import type { NavProps } from '../index.js';
+
+type Props = NavProps;
+
+const { brand, brandHref = '/', links } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const isCurrent = (link: { href: string; current?: boolean }) => {
+  if (link.current !== undefined) return link.current;
+  if (link.href === '/') return currentPath === '/';
+  return currentPath === link.href || currentPath.startsWith(link.href + '/');
+};
+---
+<nav class="pl-nav" aria-label="Primary">
+  <a class="pl-nav__brand" href={brandHref}>{brand}</a>
+  <ul class="pl-nav__links">
+    {links.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          aria-current={isCurrent(link) ? 'page' : undefined}
+        >{link.label}</a>
+      </li>
+    ))}
+  </ul>
+</nav>

@@ -1,0 +1,30 @@
+---
+import type { FooterProps } from '../index.js';
+
+type Props = FooterProps;
+
+const {
+  brand,
+  email,
+  url,
+  location,
+  year = new Date().getFullYear(),
+  tagline,
+} = Astro.props;
+---
+<footer class="pl-footer">
+  <div class="pl-footer__inner">
+    <div class="pl-footer__brand">{brand}</div>
+    <div class="pl-footer__meta">
+      {email && <a href={`mailto:${email}`}>{email}</a>}
+      {email && url && <span> · </span>}
+      {url && <a href={url}>{url.replace(/^https?:\/\//, '')}</a>}
+    </div>
+    <div class="pl-footer__rule" aria-hidden="true"></div>
+    <div class="pl-footer__tiny">
+      © {year}
+      {location && <> · {location}</>}
+      {tagline && <> · {tagline}</>}
+    </div>
+  </div>
+</footer>
