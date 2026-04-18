@@ -3,14 +3,7 @@ import type { FooterProps } from '../index.js';
 
 type Props = FooterProps;
 
-const {
-  brand,
-  email,
-  url,
-  location,
-  year = new Date().getFullYear(),
-  tagline,
-} = Astro.props;
+const { brand, email, url, location, year = new Date().getFullYear(), tagline } = Astro.props;
 ---
 <footer class="pl-footer">
   <div class="pl-footer__inner">
