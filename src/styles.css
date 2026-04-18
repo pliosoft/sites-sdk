@@ -5,9 +5,14 @@
    file (Layout.astro does this automatically).
    ============================================================ */
 
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: 100%;
@@ -17,18 +22,31 @@ html, body {
   line-height: var(--lh-normal);
 }
 
-img, svg, video { max-width: 100%; display: block; }
+img,
+svg,
+video {
+  max-width: 100%;
+  display: block;
+}
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   margin: 0;
   text-transform: uppercase;
   line-height: var(--lh-tight);
   letter-spacing: var(--tracking-upper);
   font-weight: var(--fw-bold);
 }
-h1 { font-size: var(--fs-6); }
-h2 { font-size: var(--fs-5); }
-h3 { font-size: var(--fs-4); }
+h1 {
+  font-size: var(--fs-6);
+}
+h2 {
+  font-size: var(--fs-5);
+}
+h3 {
+  font-size: var(--fs-4);
+}
 
 h4 {
   font-size: var(--fs-2);
@@ -37,7 +55,10 @@ h4 {
   line-height: var(--lh-tight);
 }
 
-p { margin: 1rem 0; line-height: var(--lh-normal); }
+p {
+  margin: 1rem 0;
+  line-height: var(--lh-normal);
+}
 
 a {
   color: var(--link);
@@ -46,15 +67,32 @@ a {
   text-underline-offset: 2px;
   transition: color var(--dur) var(--ease-out-back);
 }
-a:hover { color: var(--link-hover); }
+a:hover {
+  color: var(--link-hover);
+}
 
-:focus-visible { outline: 1px solid var(--focus-ring); outline-offset: 2px; }
+:focus-visible {
+  outline: 1px solid var(--focus-ring);
+  outline-offset: 2px;
+}
 
-code, pre, kbd { font-family: var(--font-mono); font-size: 0.9em; }
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
 
-hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
+hr {
+  border: 0;
+  border-top: var(--border-rule);
+  margin: var(--sp-6) 0;
+}
 
-.h1-rule { border-bottom: var(--border-rule); padding-bottom: var(--sp-3); }
+.h1-rule {
+  border-bottom: var(--border-rule);
+  padding-bottom: var(--sp-3);
+}
 
 /* ==========  Buttons  ========== */
 .pl-btn {
@@ -67,10 +105,18 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   border: none;
   cursor: pointer;
   border-radius: var(--radius-none);
-  transition: color var(--dur) var(--ease-out-back), background var(--dur), border-color var(--dur);
+  transition:
+    color var(--dur) var(--ease-out-back),
+    background var(--dur),
+    border-color var(--dur);
 }
-.pl-btn--primary { background: var(--ink-solid); color: var(--bg3); }
-.pl-btn--primary:hover { background: var(--highlight); }
+.pl-btn--primary {
+  background: var(--ink-solid);
+  color: var(--bg3);
+}
+.pl-btn--primary:hover {
+  background: var(--highlight);
+}
 .pl-btn--link {
   background: transparent;
   padding: 8px 2px;
@@ -79,7 +125,9 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   text-decoration-color: var(--link-underline);
   text-underline-offset: 4px;
 }
-.pl-btn--link:hover { color: var(--highlight); }
+.pl-btn--link:hover {
+  color: var(--highlight);
+}
 
 /* ==========  Nav  ========== */
 .pl-nav {
@@ -98,7 +146,9 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   color: var(--fg1);
   text-decoration: none;
 }
-.pl-nav__brand:hover { color: var(--highlight); }
+.pl-nav__brand:hover {
+  color: var(--highlight);
+}
 .pl-nav__links {
   list-style: none;
   margin: 0;
@@ -118,7 +168,9 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   transition: color var(--dur) var(--ease-out-back);
 }
 .pl-nav__links a:hover,
-.pl-nav__links a[aria-current="page"] { color: var(--highlight); }
+.pl-nav__links a[aria-current="page"] {
+  color: var(--highlight);
+}
 
 /* ==========  Footer  ========== */
 .pl-footer {
@@ -144,7 +196,9 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   text-align: right;
   font-size: var(--fs-1);
 }
-.pl-footer__meta a { color: var(--fg1); }
+.pl-footer__meta a {
+  color: var(--fg1);
+}
 .pl-footer__rule {
   grid-column: 1 / -1;
   height: 1px;
@@ -160,8 +214,12 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   opacity: 0.6;
 }
 @media (max-width: 520px) {
-  .pl-footer__inner { grid-template-columns: 1fr; }
-  .pl-footer__meta { text-align: left; }
+  .pl-footer__inner {
+    grid-template-columns: 1fr;
+  }
+  .pl-footer__meta {
+    text-align: left;
+  }
 }
 
 /* ==========  Contact form  ========== */
@@ -170,7 +228,9 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   gap: var(--sp-4);
   max-width: 520px;
 }
-.pl-form label { display: block; }
+.pl-form label {
+  display: block;
+}
 .pl-form__label {
   display: block;
   font-family: var(--font-sans);
@@ -192,20 +252,26 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   border-radius: var(--radius-none);
   background: transparent;
   outline: none;
-  transition: border-color var(--dur), box-shadow var(--dur);
+  transition:
+    border-color var(--dur),
+    box-shadow var(--dur);
 }
 .pl-form input:focus,
 .pl-form textarea:focus {
   border-color: var(--highlight);
   box-shadow: 0 0 0 1px var(--highlight);
 }
-.pl-form .pl-btn { justify-self: start; }
+.pl-form .pl-btn {
+  justify-self: start;
+}
 
 .pl-form__status[data-state="sent"] {
   padding: var(--sp-4) 0;
   border-top: 1px solid var(--highlight);
 }
-.pl-form__status[hidden] { display: none; }
+.pl-form__status[hidden] {
+  display: none;
+}
 
 /* ==========  Powered-by banner  ========== */
 .pl-powered {
@@ -221,5 +287,10 @@ hr { border: 0; border-top: var(--border-rule); margin: var(--sp-6) 0; }
   text-decoration: none;
   border-top: 1px solid var(--ink-faint);
 }
-.pl-powered:hover { color: var(--highlight); }
-.pl-powered strong { color: var(--fg1); font-weight: var(--fw-bold); }
+.pl-powered:hover {
+  color: var(--highlight);
+}
+.pl-powered strong {
+  color: var(--fg1);
+  font-weight: var(--fw-bold);
+}

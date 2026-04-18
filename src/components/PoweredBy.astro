@@ -3,10 +3,7 @@ import type { PoweredByProps } from '../index.js';
 
 type Props = PoweredByProps;
 
-const {
-  href = 'https://www.pliosoft.com',
-  label = 'Made with',
-} = Astro.props;
+const { href = 'https://www.pliosoft.com', label = 'Made with' } = Astro.props;
 ---
 <a class="pl-powered" href={href} rel="noopener">
   {label} <strong>Pliosoft</strong>
