@@ -5,14 +5,7 @@ import type { LayoutProps } from '../index.js';
 
 type Props = LayoutProps;
 
-const {
-  title,
-  description,
-  lang = 'en',
-  favicon,
-  ogImage,
-  themeColor,
-} = Astro.props;
+const { title, description, lang = 'en', favicon, ogImage, themeColor } = Astro.props;
 ---
 <!doctype html>
 <html lang={lang}>
