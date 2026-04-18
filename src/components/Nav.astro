@@ -7,9 +7,13 @@ const { brand, brandHref = '/', links } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const isCurrent = (link: { href: string; current?: boolean }) => {
-  if (link.current !== undefined) return link.current;
-  if (link.href === '/') return currentPath === '/';
-  return currentPath === link.href || currentPath.startsWith(link.href + '/');
+  if (link.current !== undefined) {
+    return link.current;
+  }
+  if (link.href === '/') {
+    return currentPath === '/';
+  }
+  return currentPath === link.href || currentPath.startsWith(`${link.href}/`);
 };
 ---
 <nav class="pl-nav" aria-label="Primary">
