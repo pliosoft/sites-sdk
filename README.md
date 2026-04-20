@@ -66,6 +66,7 @@ See [`src/tokens.css`](./src/tokens.css) for the full token list (color, typogra
 | `ContactForm` | `@pliosoft/sites-sdk/components/ContactForm.astro` |
 | `Footer` | `@pliosoft/sites-sdk/components/Footer.astro` |
 | `PoweredBy` | `@pliosoft/sites-sdk/components/PoweredBy.astro` |
+| `PreviewBanner` | `@pliosoft/sites-sdk/components/PreviewBanner.astro` |
 
 Prop types are exported from the package root:
 
@@ -73,9 +74,38 @@ Prop types are exported from the package root:
 import type { NavLink, LayoutProps, ContactFormProps } from '@pliosoft/sites-sdk';
 ```
 
+## PreviewBanner — Pliosoft preview deploys
+
+The Pliosoft platform builds a per-PR preview of every customer site at `<slug>-preview.pliosoft.co`. The `PreviewBanner` component renders Pliosoft's branded approval UI on those preview builds and renders **nothing** on production builds — it's safe to include unconditionally in your layout.
+
+```astro
+---
+import PreviewBanner from '@pliosoft/sites-sdk/components/PreviewBanner.astro';
+---
+<body>
+  <slot />
+  <PreviewBanner />
+</body>
+```
+
+The component reads its content (PR number, branch, sha, JWT) from build-time env vars set by Pliosoft's build pipeline. There are no runtime props. If you've ejected your site from the platform, the env vars are never set, and the component is a no-op.
+
 ## Portability
 
 Every customer repo in the pliosoft org uses this package through normal npm. If your repo is transferred to your own ownership, nothing changes — the package stays public and MIT-licensed. You keep consuming it, or fork it, or swap it out. That's the point.
+
+## Releasing
+
+Publishing is automated via GitHub Actions and [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) — no static `NPM_TOKEN` is stored anywhere. The `production` environment requires a tag matching `v*` and (if configured) a manual approval before publish.
+
+```sh
+npm version patch              # bumps package.json + creates git tag
+git push origin main --follow-tags
+```
+
+The workflow at `.github/workflows/publish.yml` runs on the new tag, exchanges a GitHub OIDC token for a short-lived npm token, builds, and publishes with provenance attestation.
+
+If you ever need to bootstrap trusted publishing for a brand-new package name, the very first publish has to happen manually with `npm publish` from a logged-in maintainer's machine — npm only exposes the Trusted Publisher settings page after a package exists.
 
 ## License
 
