@@ -1,0 +1,228 @@
+---
+/**
+ * Pliosoft preview-deploy approval banner.
+ *
+ * Renders only when the build was invoked with PLIOSOFT_PREVIEW=1. The build
+ * pipeline in pliosoft/sites-app sets these env vars when generating preview
+ * bundles for an open PR; production builds leave them unset, in which case
+ * this component returns null and emits nothing.
+ *
+ * Build-time env vars consumed:
+ *   PLIOSOFT_PREVIEW              "1" to enable rendering
+ *   PLIOSOFT_PREVIEW_PR           PR number (e.g. "42")
+ *   PLIOSOFT_PREVIEW_TITLE        PR title (human-readable description of the change)
+ *   PLIOSOFT_PREVIEW_BRANCH       branch name being previewed
+ *   PLIOSOFT_PREVIEW_SHA          commit sha (full or short — first 7 chars displayed)
+ *   PLIOSOFT_PREVIEW_PR_URL       https://github.com/<owner>/<repo>/pull/<n>
+ *   PLIOSOFT_PREVIEW_JWT          single-use JWT signed by the orchestrator
+ *   PLIOSOFT_PREVIEW_API          orchestrator base URL (defaults to https://sites.pliosoft.co)
+ *
+ * The banner POSTs to <PLIOSOFT_PREVIEW_API>/_preview/approve or /reject with
+ * the JWT in form data. The orchestrator verifies, marks nonce used, and
+ * merges or closes the PR via the GitHub App.
+ */
+
+const env = import.meta.env;
+const isPreview = env.PLIOSOFT_PREVIEW === '1';
+const pr = env.PLIOSOFT_PREVIEW_PR;
+const title = env.PLIOSOFT_PREVIEW_TITLE;
+const branch = env.PLIOSOFT_PREVIEW_BRANCH;
+const sha = env.PLIOSOFT_PREVIEW_SHA;
+const prUrl = env.PLIOSOFT_PREVIEW_PR_URL;
+const jwt = env.PLIOSOFT_PREVIEW_JWT;
+const api = env.PLIOSOFT_PREVIEW_API ?? 'https://sites.pliosoft.co';
+const shortSha = typeof sha === 'string' ? sha.slice(0, 7) : '';
+---
+{isPreview && pr && jwt && (
+  <aside class="pl-preview-banner" role="region" aria-label="Pliosoft preview approval">
+    <div class="pl-preview-banner__head">
+      <span class="pl-preview-banner__label">Preview</span>
+      {title ? (
+        <span class="pl-preview-banner__title" title={title}>{title}</span>
+      ) : (
+        <span class="pl-preview-banner__title pl-preview-banner__title--muted">PR #{pr}</span>
+      )}
+    </div>
+
+    <div class="pl-preview-banner__actions">
+      <form method="post" action={`${api}/_preview/approve`} class="pl-preview-banner__form">
+        <input type="hidden" name="jwt" value={jwt} />
+        <button type="submit" class="pl-preview-banner__btn pl-preview-banner__btn--approve">
+          Approve &amp; Deploy
+        </button>
+      </form>
+      <form method="post" action={`${api}/_preview/reject`} class="pl-preview-banner__form">
+        <input type="hidden" name="jwt" value={jwt} />
+        <button type="submit" class="pl-preview-banner__btn pl-preview-banner__btn--reject">
+          Reject
+        </button>
+      </form>
+    </div>
+
+    <details class="pl-preview-banner__details">
+      <summary class="pl-preview-banner__summary">Details</summary>
+      <dl class="pl-preview-banner__dl">
+        <dt>PR</dt>
+        <dd>
+          {prUrl ? (
+            <a href={prUrl} target="_blank" rel="noopener">#{pr} on GitHub ↗</a>
+          ) : (
+            <>#{pr}</>
+          )}
+        </dd>
+        {branch && (<><dt>Branch</dt><dd><code>{branch}</code></dd></>)}
+        {shortSha && (<><dt>SHA</dt><dd><code>{shortSha}</code></dd></>)}
+      </dl>
+    </details>
+  </aside>
+)}
+
+<style>
+  .pl-preview-banner {
+    /* Brand-controlled regardless of customer theme. */
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 2147483000;
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    background: rgba(255, 221, 196, 0.97);
+    color: rgba(28, 16, 8, 0.92);
+    border: 1px solid rgba(28, 16, 8, 0.18);
+    border-left: 4px solid hsla(27, 100%, 50%, 1);
+    border-radius: 6px;
+    box-shadow:
+      0 1px 2px hsla(22, 60%, 18%, 0.18),
+      0 8px 24px hsla(22, 70%, 22%, 0.18);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .pl-preview-banner__head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .pl-preview-banner__label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: hsla(27, 100%, 35%, 1);
+  }
+  .pl-preview-banner__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(28, 16, 8, 0.92);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+  }
+  .pl-preview-banner__title--muted {
+    font-weight: 500;
+    color: rgba(28, 16, 8, 0.7);
+  }
+  .pl-preview-banner__actions {
+    display: flex;
+    gap: 8px;
+  }
+  .pl-preview-banner__form {
+    margin: 0;
+    flex: 1;
+  }
+  .pl-preview-banner__btn {
+    appearance: none;
+    width: 100%;
+    border: 1px solid rgba(28, 16, 8, 0.24);
+    background: transparent;
+    color: inherit;
+    padding: 7px 12px;
+    border-radius: 4px;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275),
+      color 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+  }
+  .pl-preview-banner__btn:hover {
+    background: rgba(28, 16, 8, 0.06);
+  }
+  .pl-preview-banner__btn--approve {
+    background: hsla(27, 100%, 50%, 1);
+    color: rgba(255, 245, 232, 1);
+    border-color: hsla(27, 100%, 45%, 1);
+  }
+  .pl-preview-banner__btn--approve:hover {
+    background: hsla(27, 100%, 45%, 1);
+  }
+  .pl-preview-banner__details {
+    margin: 0;
+    border-top: 1px solid rgba(28, 16, 8, 0.10);
+    padding-top: 8px;
+  }
+  .pl-preview-banner__summary {
+    cursor: pointer;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(28, 16, 8, 0.65);
+    user-select: none;
+    list-style: none;
+  }
+  .pl-preview-banner__summary::-webkit-details-marker { display: none; }
+  .pl-preview-banner__summary::before {
+    content: '▸';
+    display: inline-block;
+    width: 1em;
+    transition: transform 150ms ease;
+  }
+  .pl-preview-banner__details[open] .pl-preview-banner__summary::before {
+    transform: rotate(90deg);
+  }
+  .pl-preview-banner__dl {
+    margin: 8px 0 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 12px;
+    font-size: 12px;
+  }
+  .pl-preview-banner__dl dt {
+    font-weight: 500;
+    color: rgba(28, 16, 8, 0.6);
+  }
+  .pl-preview-banner__dl dd {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pl-preview-banner__dl code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    background: rgba(28, 16, 8, 0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .pl-preview-banner__dl a {
+    color: hsla(27, 100%, 35%, 1);
+    text-decoration: underline;
+    text-decoration-color: hsla(27, 100%, 50%, 1);
+    text-underline-offset: 2px;
+  }
+  @media (max-width: 480px) {
+    .pl-preview-banner {
+      left: 16px;
+      right: 16px;
+      bottom: 12px;
+      width: auto;
+    }
+  }
+</style>
