@@ -4,22 +4,26 @@
  *
  * Renders only when the build was invoked with PLIOSOFT_PREVIEW=1. The build
  * pipeline in pliosoft/sites-app sets these env vars when generating preview
- * bundles for an open PR; production builds leave them unset, in which case
- * this component returns null and emits nothing.
+ * bundles for a proposed change; production builds leave them unset, in which
+ * case this component returns null and emits nothing.
  *
  * Build-time env vars consumed:
  *   PLIOSOFT_PREVIEW              "1" to enable rendering
- *   PLIOSOFT_PREVIEW_PR           PR number (e.g. "42")
- *   PLIOSOFT_PREVIEW_TITLE        PR title (human-readable description of the change)
- *   PLIOSOFT_PREVIEW_BRANCH       branch name being previewed
- *   PLIOSOFT_PREVIEW_SHA          commit sha (full or short — first 7 chars displayed)
- *   PLIOSOFT_PREVIEW_PR_URL       https://github.com/<owner>/<repo>/pull/<n>
+ *   PLIOSOFT_PREVIEW_PR           change id (used only to gate rendering)
+ *   PLIOSOFT_PREVIEW_TITLE        human-readable description of the change
  *   PLIOSOFT_PREVIEW_JWT          single-use JWT signed by the orchestrator
  *   PLIOSOFT_PREVIEW_API          orchestrator base URL (defaults to https://sites.pliosoft.co)
  *
- * The banner POSTs to <PLIOSOFT_PREVIEW_API>/_preview/approve or /reject with
- * the JWT in form data. The orchestrator verifies, marks nonce used, and
- * merges or closes the PR via the GitHub App.
+ * The banner deliberately shows only the change description — no repository,
+ * branch, or pull-request details. Reviewers see a Pliosoft surface, not a
+ * GitHub one.
+ *
+ * Approve/Reject are shown only when the page URL carries the approval key
+ * (`?k=...`) from the link Pliosoft Sites shared with the customer. The key is
+ * forwarded as form data alongside the JWT; the orchestrator verifies both, so
+ * someone who merely guesses the preview hostname gets a view-only banner (and
+ * the orchestrator refuses the action server-side regardless). Without
+ * JavaScript the banner stays view-only.
  */
 
 // process.env, not import.meta.env: Vite only exposes .env-file and
@@ -30,54 +34,56 @@ const env = process.env;
 const isPreview = env.PLIOSOFT_PREVIEW === '1';
 const pr = env.PLIOSOFT_PREVIEW_PR;
 const title = env.PLIOSOFT_PREVIEW_TITLE;
-const branch = env.PLIOSOFT_PREVIEW_BRANCH;
-const sha = env.PLIOSOFT_PREVIEW_SHA;
-const prUrl = env.PLIOSOFT_PREVIEW_PR_URL;
 const jwt = env.PLIOSOFT_PREVIEW_JWT;
 const api = env.PLIOSOFT_PREVIEW_API ?? 'https://sites.pliosoft.co';
-const shortSha = typeof sha === 'string' ? sha.slice(0, 7) : '';
 ---
 {isPreview && pr && jwt && (
-  <aside class="pl-preview-banner" role="region" aria-label="Pliosoft preview approval">
+  <aside class="pl-preview-banner" role="region" aria-label="Pliosoft preview">
     <div class="pl-preview-banner__head">
       <span class="pl-preview-banner__label">Preview</span>
       {title ? (
         <span class="pl-preview-banner__title" title={title}>{title}</span>
       ) : (
-        <span class="pl-preview-banner__title pl-preview-banner__title--muted">PR #{pr}</span>
+        <span class="pl-preview-banner__title pl-preview-banner__title--muted">Proposed change</span>
       )}
     </div>
 
-    <div class="pl-preview-banner__actions">
+    <p class="pl-preview-banner__note" data-pl-preview-note>
+      You're viewing a preview of a proposed change.
+    </p>
+
+    <div class="pl-preview-banner__actions" data-pl-preview-actions hidden>
       <form method="post" action={`${api}/_preview/approve`} class="pl-preview-banner__form">
         <input type="hidden" name="jwt" value={jwt} />
+        <input type="hidden" name="k" value="" />
         <button type="submit" class="pl-preview-banner__btn pl-preview-banner__btn--approve">
           Approve &amp; Deploy
         </button>
       </form>
       <form method="post" action={`${api}/_preview/reject`} class="pl-preview-banner__form">
         <input type="hidden" name="jwt" value={jwt} />
+        <input type="hidden" name="k" value="" />
         <button type="submit" class="pl-preview-banner__btn pl-preview-banner__btn--reject">
           Reject
         </button>
       </form>
     </div>
 
-    <details class="pl-preview-banner__details">
-      <summary class="pl-preview-banner__summary">Details</summary>
-      <dl class="pl-preview-banner__dl">
-        <dt>PR</dt>
-        <dd>
-          {prUrl ? (
-            <a href={prUrl} target="_blank" rel="noopener">#{pr} on GitHub ↗</a>
-          ) : (
-            <>#{pr}</>
-          )}
-        </dd>
-        {branch && (<><dt>Branch</dt><dd><code>{branch}</code></dd></>)}
-        {shortSha && (<><dt>SHA</dt><dd><code>{shortSha}</code></dd></>)}
-      </dl>
-    </details>
+    <script is:inline>
+      (() => {
+        var k = new URLSearchParams(location.search).get('k');
+        if (!k) return;
+        var banner = document.currentScript.closest('.pl-preview-banner');
+        if (!banner) return;
+        banner.querySelectorAll('input[name="k"]').forEach((input) => {
+          input.value = k;
+        });
+        var actions = banner.querySelector('[data-pl-preview-actions]');
+        if (actions) actions.hidden = false;
+        var note = banner.querySelector('[data-pl-preview-note]');
+        if (note) note.hidden = true;
+      })();
+    </script>
   </aside>
 )}
 
@@ -133,6 +139,11 @@ const shortSha = typeof sha === 'string' ? sha.slice(0, 7) : '';
     font-weight: 500;
     color: rgba(28, 16, 8, 0.7);
   }
+  .pl-preview-banner__note {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(28, 16, 8, 0.65);
+  }
   .pl-preview-banner__actions {
     display: flex;
     gap: 8px;
@@ -166,60 +177,6 @@ const shortSha = typeof sha === 'string' ? sha.slice(0, 7) : '';
   }
   .pl-preview-banner__btn--approve:hover {
     background: hsla(27, 100%, 45%, 1);
-  }
-  .pl-preview-banner__details {
-    margin: 0;
-    border-top: 1px solid rgba(28, 16, 8, 0.10);
-    padding-top: 8px;
-  }
-  .pl-preview-banner__summary {
-    cursor: pointer;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(28, 16, 8, 0.65);
-    user-select: none;
-    list-style: none;
-  }
-  .pl-preview-banner__summary::-webkit-details-marker { display: none; }
-  .pl-preview-banner__summary::before {
-    content: '▸';
-    display: inline-block;
-    width: 1em;
-    transition: transform 150ms ease;
-  }
-  .pl-preview-banner__details[open] .pl-preview-banner__summary::before {
-    transform: rotate(90deg);
-  }
-  .pl-preview-banner__dl {
-    margin: 8px 0 0;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 4px 12px;
-    font-size: 12px;
-  }
-  .pl-preview-banner__dl dt {
-    font-weight: 500;
-    color: rgba(28, 16, 8, 0.6);
-  }
-  .pl-preview-banner__dl dd {
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .pl-preview-banner__dl code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 11px;
-    background: rgba(28, 16, 8, 0.06);
-    padding: 1px 5px;
-    border-radius: 3px;
-  }
-  .pl-preview-banner__dl a {
-    color: hsla(27, 100%, 35%, 1);
-    text-decoration: underline;
-    text-decoration-color: hsla(27, 100%, 50%, 1);
-    text-underline-offset: 2px;
   }
   @media (max-width: 480px) {
     .pl-preview-banner {
