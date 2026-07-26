@@ -1,6 +1,6 @@
 {
   "name": "@pliosoft/sites-sdk",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Shared Astro components, layouts, and design tokens for Pliosoft-hosted customer sites.",
   "license": "MIT",
   "author": "Pliosoft",
@@ -34,6 +34,7 @@
     "./components/ContactForm.astro": "./dist/components/ContactForm.astro",
     "./components/Footer.astro": "./dist/components/Footer.astro",
     "./components/PoweredBy.astro": "./dist/components/PoweredBy.astro",
+    "./components/PreviewBanner.astro": "./dist/components/PreviewBanner.astro",
     "./package.json": "./package.json"
   },
   "peerDependencies": {
