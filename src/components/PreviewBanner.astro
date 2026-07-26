@@ -22,7 +22,11 @@
  * merges or closes the PR via the GitHub App.
  */
 
-const env = import.meta.env;
+// process.env, not import.meta.env: Vite only exposes .env-file and
+// PUBLIC_-prefixed vars on import.meta.env, and the pipeline passes these
+// through the shell environment. Frontmatter runs in Node at build time
+// (static output), so process.env sees them.
+const env = process.env;
 const isPreview = env.PLIOSOFT_PREVIEW === '1';
 const pr = env.PLIOSOFT_PREVIEW_PR;
 const title = env.PLIOSOFT_PREVIEW_TITLE;
