@@ -1,6 +1,6 @@
 {
   "name": "@pliosoft/sites-sdk",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Shared Astro components, layouts, and design tokens for Pliosoft-hosted customer sites.",
   "license": "MIT",
   "author": "Pliosoft",
