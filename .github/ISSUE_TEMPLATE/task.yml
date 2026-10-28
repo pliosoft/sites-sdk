@@ -1,0 +1,16 @@
+name: Feature or task
+description: A new component or prop, a change to the public surface, or maintenance work.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be possible when this is done, and why.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Public-surface impact (exports, props, CSS custom properties), open questions, related issues or PRs.
