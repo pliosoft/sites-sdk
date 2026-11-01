@@ -41,8 +41,8 @@ Tokens are plain CSS custom properties on `:root`. Override any subset in a styl
 ```css
 /* src/styles/brand.css */
 :root {
-  --paper:     #0f1115;
-  --ink:       rgba(255, 255, 255, 0.92);
+  --paper: #0f1115;
+  --ink: rgba(255, 255, 255, 0.92);
   --ink-solid: #ffffff;
   --highlight: #46d4a1;
 }
@@ -59,13 +59,13 @@ See [`src/tokens.css`](./src/tokens.css) for the full token list (color, typogra
 
 ## Components
 
-| Component | Subpath |
-|---|---|
-| `Layout` | `@pliosoft/sites-sdk/components/Layout.astro` |
-| `Nav` | `@pliosoft/sites-sdk/components/Nav.astro` |
-| `ContactForm` | `@pliosoft/sites-sdk/components/ContactForm.astro` |
-| `Footer` | `@pliosoft/sites-sdk/components/Footer.astro` |
-| `PoweredBy` | `@pliosoft/sites-sdk/components/PoweredBy.astro` |
+| Component       | Subpath                                              |
+| --------------- | ---------------------------------------------------- |
+| `Layout`        | `@pliosoft/sites-sdk/components/Layout.astro`        |
+| `Nav`           | `@pliosoft/sites-sdk/components/Nav.astro`           |
+| `ContactForm`   | `@pliosoft/sites-sdk/components/ContactForm.astro`   |
+| `Footer`        | `@pliosoft/sites-sdk/components/Footer.astro`        |
+| `PoweredBy`     | `@pliosoft/sites-sdk/components/PoweredBy.astro`     |
 | `PreviewBanner` | `@pliosoft/sites-sdk/components/PreviewBanner.astro` |
 
 Prop types are exported from the package root:
