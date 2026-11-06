@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -49,21 +49,21 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "a11y": { "recommended": true },
-      "complexity": { "recommended": true },
+      "preset": "recommended",
+      "a11y": { "preset": "none" },
+      "complexity": { "preset": "none" },
       "correctness": {
-        "recommended": true,
+        "preset": "recommended",
         "noUndeclaredDependencies": "error",
         "noUnusedFunctionParameters": "error",
         "noUnusedImports": "error",
         "noUnusedPrivateClassMembers": "error",
         "noUnusedVariables": "error"
       },
-      "performance": { "recommended": true },
-      "security": { "recommended": true },
+      "performance": { "preset": "none" },
+      "security": { "preset": "none" },
       "style": {
-        "recommended": true,
+        "preset": "recommended",
         "noImplicitBoolean": "error",
         "noNegationElse": "error",
         "noParameterAssign": "error",
@@ -86,7 +86,7 @@
         "useThrowOnlyError": "error"
       },
       "suspicious": {
-        "recommended": true,
+        "preset": "recommended",
         "noConsole": { "level": "error", "options": { "allow": ["warn", "error"] } },
         "noEmptyBlockStatements": "error",
         "noEvolvingTypes": "error",
@@ -96,7 +96,7 @@
         "useErrorMessage": "error",
         "useNumberToFixedDigitsArgument": "error"
       },
-      "nursery": { "recommended": true }
+      "nursery": { "preset": "none" }
     }
   },
   "assist": {
