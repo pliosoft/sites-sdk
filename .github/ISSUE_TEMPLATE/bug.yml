@@ -1,0 +1,27 @@
+name: Bug
+description: A component, layout, or token in @pliosoft/sites-sdk behaves wrongly.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: The component and props involved, or a minimal Astro snippet.
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "@pliosoft/sites-sdk and astro versions (from package-lock.json)."
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Build output, browser console, or screenshot.
+      render: text
