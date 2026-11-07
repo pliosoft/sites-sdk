@@ -10,7 +10,7 @@ Customer sites on Pliosoft's hosted platform consume this package to get a consi
 npm install @pliosoft/sites-sdk astro
 ```
 
-`astro` is a peer dependency — the SDK ships no runtime of its own and works with any Astro 4 or 5 project.
+`astro` is a peer dependency — the SDK ships no runtime of its own and works with Astro 7 projects (SDK 0.3.x supports Astro 4 and 5).
 
 ## Usage
 
